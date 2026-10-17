@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sepucuk. by Tiziano</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #F4F9F4; --color-surface: #FFFFFF; --color-primary: #2D6A4F;
+      --color-accent: #52B788; --color-text: #1B4332; --color-text-light: #588157;
+      --color-border: #D8E8D8; --font-base: 20px; --line-height: 1.7;
+      --radius: 16px; --tap-min: 48px; --transition: all 0.2s ease;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Nunito','Segoe UI',system-ui,sans-serif; background: var(--color-bg); color: var(--color-text);
+      font-size: var(--font-base); line-height: var(--line-height); min-height: 100vh; padding-bottom: 110px;
+    }
+    header {
+      background: var(--color-surface); padding: 14px 18px; border-bottom: 2px solid var(--color-border);
+      position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .logo { font-size: 1.3em; font-weight: 700; color: var(--color-primary); }
+    .tagline { font-size: 0.7em; color: var(--color-text-light); font-weight: 600; }
+    .hud { margin-left: auto; display: flex; gap: 8px; font-weight: 700; font-size: 0.85em; }
+    .hud span { background: #ECF5EC; padding: 6px 12px; border-radius: 20px; color: var(--color-primary); white-space: nowrap; }
+    .font-control {
+      background: var(--color-surface); padding: 10px 18px; border-bottom: 1px solid var(--color-border);
+      position: sticky; top: 64px; z-index: 99; display: flex; align-items: center; gap: 12px;
+    }
+    .font-label { font-weight: 700; color: var(--color-primary); white-space: nowrap; font-size: 0.85em; }
+    input[type="range"] { flex: 1; height: 8px; border-radius: 4px; background: var(--color-border); outline: none; -webkit-appearance: none; }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 30px; height: 30px; border-radius: 50%;
+      background: var(--color-accent); cursor: pointer; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .font-size-display { min-width: 48px; text-align: right; font-weight: 700; color: var(--color-primary); }
+    main { padding: 24px; max-width: 600px; margin: 0 auto; }
+    .card {
+      background: var(--color-surface); border-radius: var(--radius); padding: 26px; margin-bottom: 24px;
+      border: 2px solid var(--color-border); box-shadow: 0 4px 12px rgba(45,106,79,0.06);
+    }
+    .card h2 { color: var(--color-primary); margin-bottom: 16px; font-size: 1.25em; display: flex; align-items: center; gap: 10px; }
+    .card p { margin-bottom: 16px; }
+    .reflection-q { background: #ECF5EC; padding: 20px; border-radius: 12px; border-left: 4px solid var(--color-accent); font-style: italic; margin-top: 16px; }
+    .verse { font-size: 1.1em; font-weight: 700; color: var(--color-primary); background: #FAFFFA; padding: 20px; border-radius: 12px; margin-bottom: 16px; border: 1px dashed var(--color-accent); }
+    button, .btn {
+      background: var(--color-accent); color: white; border: none; border-radius: 12px; padding: 16px 28px;
+      font-size: 1em; font-weight: 700; font-family: inherit; cursor: pointer; min-height: var(--tap-min);
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition);
+      width: 100%; text-decoration: none;
+    }
+    button:hover, .btn:hover { background: var(--color-primary); transform: translateY(-1px); }
+    .btn-outline { background: transparent; color: var(--color-primary); border: 2px solid var(--color-primary); }
+    .btn-outline:hover { background: var(--color-primary); color: white; }
+    .btn-wa { background: #25D366; }
+    .btn-wa:hover { background: #1EBE5A; }
+    textarea {
+      width: 100%; min-height: 110px; padding: 18px; border: 2px solid var(--color-border); border-radius: 12px;
+      font-family: inherit; font-size: inherit; line-height: inherit; resize: vertical; margin-bottom: 16px;
+      color: var(--color-text); background: #FAFFFA;
+    }
+    textarea:focus { outline: none; border-color: var(--color-accent); }
+    .emotion-stickers { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+    .sticker {
+      font-size: 1.5em; padding: 8px 12px; border-radius: 12px; border: 2px solid var(--color-border);
+      background: white; cursor: pointer; transition: var(--transition); min-width: var(--tap-min); min-height: var(--tap-min);
+      display: flex; align-items: center; justify-content: center; width: auto;
+    }
+    .sticker.selected { border-color: var(--color-accent); background: #ECF5EC; transform: scale(1.05); }
+    nav.bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; background: var(--color-surface);
+      border-top: 2px solid var(--color-border); display: flex; justify-content: space-around;
+      padding: 6px 2px; padding-bottom: max(6px, env(safe-area-inset-bottom)); z-index: 100; overflow-x: auto;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--color-text-light);
+      padding: 6px 2px; border-radius: 10px; min-width: 50px; flex: 1;
+      transition: var(--transition); cursor: pointer; border: none; background: none; font-family: inherit;
+    }
+    .nav-item.active { color: var(--color-primary); background: #ECF5EC; }
+    .nav-icon { font-size: 1.3em; line-height: 1; }
+    .nav-label { font-size: 0.58em; font-weight: 700; }
+    .hidden { display: none !important; }
+    .toast {
+      position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: var(--color-primary);
+      color: white; padding: 16px 24px; border-radius: 12px; font-weight: 700; opacity: 0; transition: opacity 0.3s;
+      pointer-events: none; z-index: 400; text-align: center; max-width: 92%; font-size: 0.9em;
+    }
+    .toast.show { opacity: 1; }
+    .list-item {
+      display: flex; align-items: center; gap: 14px; width: 100%;
+      background: #FAFFFA; border: 2px solid var(--color-border); border-radius: 12px;
+      padding: 14px 18px; margin-bottom: 10px; cursor: pointer; transition: var(--transition);
+      font-family: inherit; font-size: 0.95em; text-align: left; color: var(--color-text);
+    }
+    .list-item:hover { border-color: var(--color-accent); background: #ECF5EC; }
+    .li-icon { font-size: 1.5em; }
+    .li-text { flex: 1; font-weight: 700; }
+    .li-sub { font-size: 0.75em; font-weight: 600; color: var(--color-text-light); display: block; }
+    .warta-item { border-left: 4px solid var(--color-accent); padding: 16px 20px; background: #FAFFFA; border-radius: 0 12px 12px 0; margin-bottom: 16px; }
+    .warta-date { font-size: 0.72em; font-weight: 700; color: var(--color-accent); text-transform: uppercase; }
+    .warta-item h3 { color: var(--color-primary); font-size: 1.05em; margin: 6px 0 8px; }
+    .warta-item p { margin-bottom: 0; font-size: 0.9em; }
+    .meditation-card { padding: 0; overflow: hidden; cursor: pointer; transition: var(--transition); }
+    .meditation-image { height: 130px; background: linear-gradient(135deg,#ECF5EC 0%,#D8E8D8 100%); display: flex; align-items: center; justify-content: center; font-size: 3.5em; }
+    .meditation-content { padding: 22px; }
+    .meditation-header h3 { color: var(--color-primary); font-size: 1.15em; margin-bottom: 6px; }
+    .meditation-tag { display: inline-block; background: #ECF5EC; color: var(--color-primary); padding: 4px 12px; border-radius: 20px; font-size: 0.78em; font-weight: 700; }
+    .meditation-meta { display: flex; gap: 16px; margin: 14px 0; font-size: 0.82em; color: var(--color-text-light); font-weight: 600; }
+    .filter-btn { font-size: 0.85em !important; padding: 10px 16px !important; min-width: auto !important; width: auto !important; }
+    .filter-btn.selected { background: var(--color-accent) !important; color: white !important; }
+    .modal { position: fixed; inset: 0; background: rgba(27,67,50,0.6); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+    .modal.hidden { display: none !important; }
+    .modal-content { max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; animation: modalIn 0.3s ease; }
+    @keyframes modalIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; font-size: 1em; color: var(--color-text-light); cursor: pointer; padding: 8px; min-height: auto; width: auto; }
+    .prayer-text { white-space: pre-line; font-size: 1.05em; line-height: 1.9; background: #FAFFFA; padding: 24px; border-radius: 12px; border: 1px solid var(--color-border); margin-top: 12px; }
+    .step { padding: 18px; margin: 12px 0; background: #FAFFFA; border-radius: 12px; border-left: 4px solid var(--color-accent); }
+    .step-number { display: inline-block; background: var(--color-accent); color: white; width: 32px; height: 32px; border-radius: 50%; text-align: center; line-height: 32px; font-weight: 700; margin-right: 10px; font-size: 0.9em; }
+    .pohon-display { font-size: 5.5em; line-height: 1.3; margin: 16px 0; min-height: 110px; display: flex; align-items: center; justify-content: center; }
+    .progress-luar { background: var(--color-border); border-radius: 20px; height: 22px; overflow: hidden; margin: 12px 0; }
+    .progress-dalam { background: linear-gradient(90deg, var(--color-accent), var(--color-primary)); height: 100%; border-radius: 20px; transition: width 0.5s ease; }
+    .bibit-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    .bibit-btn { flex: 1; min-width: 140px; width: auto; flex-direction: column; padding: 14px 10px; font-size: 0.9em; }
+    .foto-preview { max-width: 100%; border-radius: 12px; border: 2px solid var(--color-accent); margin: 12px 0; }
+    .status-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 0.85em; margin-bottom: 8px; }
+    .badge-hidup { background: #ECF5EC; color: var(--color-primary); }
+    .badge-layu { background: #FFF3CD; color: #856404; }
+    .badge-mati { background: #F8D7DA; color: #842029; }
+    @media (max-width: 400px) {
+      main { padding: 18px 12px; }
+      .card { padding: 22px 16px; }
+      .nav-label { font-size: 0.52em; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🌱 Sepucuk.</div>
+    <div class="tagline">Merawat Iman, Merekatkan Kasih</div>
+    <div class="hud">
+      <span>💰 <span id="hudFP">0</span></span>
+      <span>💧 <span id="hudSiram">0</span></span>
+    </div>
+  </header>
+
+  <div class="font-control" role="region" aria-label="Pengaturan ukuran huruf">
+    <span class="font-label">Huruf</span>
+    <input type="range" id="fontSlider" min="14" max="36" step="1" value="20" aria-label="Ukuran huruf" />
+    <span class="font-size-display" id="fontSizeDisplay">20pt</span>
+  </div>
+
+  <main>
+    <!-- RENUNGAN -->
+    <section id="renungan" class="content-section">
+      <div class="card">
+        <h2>🌿 Sepucuk Cinta Hari Ini</h2>
+        <p id="tanggalRenungan" style="color:var(--color-text-light); font-weight:600;"></p>
+        <div class="verse" id="renunganAyat"></div>
+        <p id="renunganIsi"></p>
+        <div class="reflection-q" id="renunganRefleksi"></div>
+        <button style="margin-top:20px;" class="btn btn-outline" onclick="tampilkanRenunganAcak(true)">🔄 Renungan Lain (+2 💰)</button>
+      </div>
+    </section>
+
+    <!-- WARTA -->
+    <section id="warta" class="content-section hidden">
+      <div class="card">
+        <h2>📰 Warta Gereja Universal</h2>
+        <div id="wartaContainer"></div>
+      </div>
+    </section>
+
+    <!-- DOA HARIAN -->
+    <section id="doaHarian" class="content-section hidden">
+      <div class="card">
+        <h2>🙏 Doa Sehari-hari</h2>
+        <p>Doa singkat untuk setiap waktu. Ketuk untuk membuka. <strong>Membaca doa = +2 💰</strong></p>
+        <div id="doaContainer" style="margin-top:16px;"></div>
+      </div>
+    </section>
+
+    <!-- MEDITASI -->
+    <section id="meditasi" class="content-section hidden">
+      <div class="card">
+        <h2>🕊️ Jalan Doa & Meditasi</h2>
+        <div class="emotion-stickers" role="group" aria-label="Filter">
+          <button class="sticker filter-btn selected" data-filter="all">Semua</button>
+          <button class="sticker filter-btn" data-filter="kecemasan">😰 Cemas</button>
+          <button class="sticker filter-btn" data-filter="syukur">🙏 Syukur</button>
+          <button class="sticker filter-btn" data-filter="keputusan">🤔 Keputusan</button>
+          <button class="sticker filter-btn" data-filter="keluarga">👨‍👩‍👧 Keluarga</button>
+          <button class="sticker filter-btn" data-filter="hening">🕊️ Hening</button>
+        </div>
+      </div>
+      <div id="meditationCatalog" style="display:flex; flex-direction:column; gap:24px;"></div>
+    </section>
+
+    <!-- LAGU -->
+    <section id="lagu" class="content-section hidden">
+      <div class="card">
+        <h2>🎵 15 Lagu Rohani</h2>
+        <p>Ketuk judul untuk mendengarkan. <strong>Mendengar 1 lagu = +3 💰</strong></p>
+        <div id="laguContainer" style="margin-top:16px;"></div>
+      </div>
+    </section>
+
+    <!-- JURNAL -->
+    <section id="jurnal" class="content-section hidden">
+      <div class="card">
+        <h2>📸 Picture of Today</h2>
+        <p>Unggah 1 foto hari ini (cucu, bunga, pemandangan...) → <strong>GRATIS 1 💧 Siraman Rohani!</strong></p>
+        <input type="file" id="fotoInput" accept="image/*" style="margin-bottom:12px; font-family:inherit; font-size:0.9em; width:100%;" aria-label="Unggah foto hari ini" />
+        <div id="fotoPreviewWrap"></div>
+      </div>
+      <div class="card">
+        <h2>🧒 Sayang Cucu</h2>
+        <p>Kirim berkat untuk cucu tercinta (1x sehari = <strong>+5 💰</strong>)</p>
+        <button class="btn" onclick="berkatiCucu()">💕 Berkati Cucu Hari Ini</button>
+      </div>
+      <div class="card">
+        <h2>📝 Jurnal Syukur <span style="font-size:0.7em; color:var(--color-accent);">(+5 💰)</span></h2>
+        <div class="emotion-stickers" role="group" aria-label="Perasaan">
+          <button class="sticker" data-emotion="bersyukur">🙏</button>
+          <button class="sticker" data-emotion="damai">😌</button>
+          <button class="sticker" data-emotion="gembira">😊</button>
+          <button class="sticker" data-emotion="tenang">🌿</button>
+          <button class="sticker" data-emotion="harapan">🌱</button>
+        </div>
+        <textarea id="journalInput" placeholder="Hari ini saya bersyukur untuk..." aria-label="Catatan syukur"></textarea>
+        <button onclick="saveJournal()">💾 Simpan Catatan</button>
+        <div id="journalHistory" style="margin-top:24px;"></div>
+      </div>
+    </section>
+
+    <!-- KEBUN IMAN -->
+    <section id="kebun" class="content-section hidden">
+      <div class="card" style="text-align:center;">
+        <h2 style="justify-content:center;">🌳 Kebun Iman</h2>
+        <div id="statusBadge"></div>
+        <div class="pohon-display" id="tampilPohon" aria-live="polite"></div>
+        <p id="namaPohon" style="font-weight:700; color:var(--color-primary); margin-bottom:4px;"></p>
+        <p id="progresSiram" style="color:var(--color-text-light); font-weight:600; font-size:0.9em;"></p>
+        <div class="progress-luar"><div class="progress-dalam" id="progressBar" style="width:0%"></div></div>
+        <p id="sisaWaktuSiram" style="font-size:0.85em; color:var(--color-text-light); font-weight:600;"></p>
+        <button class="btn" style="margin-top:12px;" onclick="siramiPohon()">💧 Siram Pohon</button>
+        <button class="btn btn-outline" style="margin-top:8px;" onclick="tukarFaithPoint()">💰 Tukar 10 FP → 1 💧</button>
+        <button class="btn btn-wa hidden" id="btnShareWA" style="margin-top:8px;" onclick="shareBuahWA()">📤 Bagikan Buah Iman ke WhatsApp</button>
+      </div>
+      <div class="card">
+        <h2>🛒 Toko Bibit <span style="font-size:0.65em; color:var(--color-text-light);">(50 💰 / bibit)</span></h2>
+        <p style="font-size:0.9em;">Siram pohon tiap hari. <strong>Tidak disiram 24 jam → layu 🥀 · 48 jam → mati 🪵</strong> · 12x siram → 🍎 <strong>Buah Iman</strong> (bisa dishare ke WA!)</p>
+        <div class="bibit-grid">
+          <button class="btn bibit-btn" onclick="beliBibit('telang')">💜<br>Telang</button>
+          <button class="btn bibit-btn" onclick="beliBibit('matahari')">💛<br>Matahari</button>
+          <button class="btn bibit-btn" onclick="beliBibit('bayam')">💚<br>Bayam</button>
+        </div>
+        <p id="infoBuah" style="margin-top:16px; font-weight:700; color:var(--color-primary);"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL -->
+  <div id="appModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content card">
+      <button class="modal-close" onclick="closeModal()" aria-label="Tutup">✕ Tutup</button>
+      <h2 id="modalTitle" style="margin-top:8px; color:var(--color-primary);"></h2>
+      <div id="modalBody"></div>
+      <div id="modalTimer" class="hidden" style="text-align:center; margin:20px 0;">
+        <p id="timerDisplayModal" style="font-size:2em; font-weight:700; color:var(--color-primary);"></p>
+        <button class="btn btn-outline" id="timerToggleModal" onclick="toggleModalTimer()">⏱️ Mulai Timer</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" role="navigation" aria-label="Menu utama">
+    <button class="nav-item active" data-target="renungan" aria-current="page"><span class="nav-icon">🌿</span><span class="nav-label">Renungan</span></button>
+    <button class="nav-item" data-target="warta"><span class="nav-icon">📰</span><span class="nav-label">Warta</span></button>
+    <button class="nav-item" data-target="doaHarian"><span class="nav-icon">🙏</span><span class="nav-label">Doa</span></button>
+    <button class="nav-item" data-target="meditasi"><span class="nav-icon">🕊️</span><span class="nav-label">Meditasi</span></button>
+    <button class="nav-item" data-target="lagu"><span class="nav-icon">🎵</span><span class="nav-label">Lagu</span></button>
+    <button class="nav-item" data-target="jurnal"><span class="nav-icon">📝</span><span class="nav-label">Jurnal</span></button>
+    <button class="nav-item" data-target="kebun"><span class="nav-icon">🌳</span><span class="nav-label">Kebun</span></button>
+  </nav>
+
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+  <canvas id="canvasBuah" width="800" height="800" class="hidden"></canvas>
+
+  <script>
+    /* ================= UTILITAS ================= */
+    const $ = id => document.getElementById(id);
+    function showToast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3200); }
+    function hariIni() { return new Date().toDateString(); }
+
+    /* ================= FONT ================= */
+    const fontSlider = $('fontSlider'), root = document.documentElement;
+    const savedFS = localStorage.getItem('sepucuk-font-size');
+    if (savedFS) { fontSlider.value = parseInt(savedFS,10); updateFontSize(parseInt(savedFS,10)); }
+    function updateFontSize(size) {
+      root.style.setProperty('--font-base', size+'px');
+      root.style.setProperty('--line-height', size > 28 ? '1.8' : '1.7');
+      $('fontSizeDisplay').textContent = size+'pt';
+      localStorage.setItem('sepucuk-font-size', size);
+    }
+    fontSlider.addEventListener('input', e => updateFontSize(parseInt(e.target.value,10)));
+
+    /* ================= NAVIGASI ================= */
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.content-section');
+    navItems.forEach(item => item.addEventListener('click', () => {
+      const target = item.dataset.target;
+      navItems.forEach(n => { n.classList.remove('active'); n.removeAttribute('aria-current'); });
+      item.classList.add('active'); item.setAttribute('aria-current','page');
+      sections.forEach(s => s.classList.toggle('hidden', s.id !== target));
+      if (target === 'kebun') renderKebun();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }));
+
+    /* ================= KEUANGAN FAITHPOINT ================= */
+    const KEY_FP = 'sepucuk-fp';
+    let fpData = JSON.parse(localStorage.getItem(KEY_FP) || '{"fp":100,"aktivitas":{},"buah":0}');
+    function simpanFP() { localStorage.setItem(KEY_FP, JSON.stringify(fpData)); updateHUD(); }
+    function updateHUD() { $('hudFP').textContent = fpData.fp; $('hudSiram').textContent = kebun.siraman; }
+    function tambahFP(jumlah, key, maksPerHari = 99) {
+      const catatan = fpData.aktivitas[key] || { tanggal:'', jumlah:0 };
+      if (catatan.tanggal !== hariIni()) { catatan.tanggal = hariIni(); catatan.jumlah = 0; }
+      if (catatan.jumlah >= maksPerHari) return false;
+      catatan.jumlah++;
+      fpData.aktivitas[key] = catatan;
+      fpData.fp += jumlah;
+      simpanFP();
+      return true;
+    }
+
+    /* ================= RENUNGAN ================= */
+    const renunganData = [
+      { ayat:'"Tuhan adalah gembalaku, takkan kekurangan aku." — Mazmur 23:1', isi:'Seperti gembala yang mengenal setiap dombanya, Tuhan mengenal nama Anda. Ia tidak pernah meninggalkan Anda sedetik pun.', refleksi:'💭 Percayakan satu kekhawatiran Anda hari ini kepada Sang Gembala.' },
+      { ayat:'"Datanglah kepada-Ku, semua yang letih lesu dan berbeban berat." — Matius 11:28', isi:'Tuhan tidak meminta Anda kuat setiap saat. Ia justru menantikan Anda datang apa adanya, dengan segala kelelahan.', refleksi:'💭 Beban apa yang ingin saya serahkan kepada Tuhan hari ini?' },
+      { ayat:'"Segala perkara dapat kutanggung di dalam Dia yang memberi kekuatan kepadaku." — Filipi 4:13', isi:'Kekuatan kita bukan dari otot atau usia muda, melainkan dari Tuhan yang menyertai setiap langkah.', refleksi:'💭 Ucapkan perlahan: "Tuhan, Engkaulah kekuatanku hari ini."' },
+      { ayat:'"Kasihilah sesamamu manusia seperti dirimu sendiri." — Markus 12:31', isi:'Senyum kepada tetangga, sapaan hangat kepada cucu, doa untuk sahabat — semuanya adalah kasih yang hidup.', refleksi:'💭 Siapa yang bisa saya sapa dengan tulus hari ini?' },
+      { ayat:'"Rancangan damai sejahtera, bukan kecelakaan." — Yeremia 29:11', isi:'Masa lalu sudah berlalu, masa depan ada di tangan Tuhan. Rancangan-Nya untuk Anda adalah damai.', refleksi:'💭 Percayakah saya bahwa rencana Tuhan lebih indah dari rencana saya?' },
+      { ayat:'"Bersyukurlah kepada Tuhan, sebab Ia baik!" — Mazmur 136:1', isi:'Syukur mengubah yang kita miliki menjadi cukup, bahkan berlimpah. Napas pagi ini saja sudah anugerah.', refleksi:'💭 Sebutkan tiga hal kecil yang saya syukuri hari ini.' },
+      { ayat:'"Janganlah khawatir akan hari besok." — Matius 6:34', isi:'Tuhan memberi rahmat untuk HARI INI. Kekhawatiran akan esok hanya mencuri damai hari ini.', refleksi:'💭 Apa yang bisa saya lepaskan dan serahkan kepada Tuhan?' },
+      { ayat:'"Allah itu bagi kita tempat perlindungan dan kekuatan." — Mazmur 46:2', isi:'Dalam setiap kesulitan hidup, Tuhan terbukti setia. Ingatlah kembali pertolongan-Nya di masa lalu.', refleksi:'💭 Kapan Tuhan pernah menolong saya saat hampir putus asa?' },
+      { ayat:'"Serahkanlah segala kekuatiranmu kepada-Nya." — 1 Petrus 5:7', isi:'Tuhan tidak pernah berkata "sini, Aku memberimu beban". Ia berkata "serahkan bebanmu kepada-Ku".', refleksi:'💭 Tarik napas, serahkan satu beban dalam doa singkat.' },
+      { ayat:'"Akulah terang dunia." — Yohanes 8:12', isi:'Mengikut Yesus berarti berjalan dalam terang, meski langkah pelan. Terang-Nya cukup untuk satu langkah ke depan.', refleksi:'💭 Langkah kecil apa yang Tuhan minta saya ambil hari ini?' },
+      { ayat:'"Bapa, ke dalam tangan-Mu Kuserahkan nyawa-Ku." — Lukas 23:46', isi:'Doa penyerahan total Yesus. Setiap malam sebelum tidur, kita pun bisa menyerahkan hari kita ke tangan Bapa.', refleksi:'💭 Sudahkah saya menutup hari dengan penyerahan penuh?' },
+      { ayat:'"Di mana dua tiga orang berkumpul dalam nama-Ku, di situ Aku ada." — Matius 18:20', isi:'Doa bersama keluarga, misa bersama umat, bahkan doa berdua dengan cucu — Tuhan hadir di sana.', refleksi:'💭 Kapan terakhir saya berdoa bersama keluarga?' },
+      { ayat:'"Hati yang gembira adalah obat." — Amsal 17:22', isi:'Sukacita sederhana — tawa, syukur, persahabatan — menyehatkan jiwa dan raga di usia senja.', refleksi:'💭 Apa yang membuat hati saya gembira hari ini?' },
+      { ayat:'"Aku menyertai kamu senantiasa sampai akhir zaman." — Matius 28:20', isi:'Janji-Nya tidak bersyarat dan tidak kedaluwarsa. Sampai rambut memutih, Ia tetap menyertai.', refleksi:'💭 Sadarkah saya hari ini bahwa Ia berjalan bersama saya?' },
+      { ayat:'"Kasihilah musuhmu dan berdoalah bagi mereka yang menganiaya kamu." — Matius 5:44', isi:'Mendoakan orang yang menyakiti kita membebaskan hati dari kepahitan. Ampunan adalah hadiah untuk diri sendiri.', refleksi:'💭 Adakah nama yang perlu saya doakan untuk berdamai?' },
+      { ayat:'"Tuhan dekat pada orang-orang yang patah hati." — Mazmur 34:19', isi:'Justru saat hati remuk, Tuhan paling dekat. Ia mengumpulkan setiap air mata kita.', refleksi:'💭 Dalam kesedihan, maukah saya mengundang Tuhan mendekat?' },
+      { ayat:'"Jangan takut, sebab Aku menyertai engkau." — Yesaya 41:10', isi:'Kata "jangan takut" diulang ratusan kali dalam Alkitab — karena Tuhan tahu kita mudah cemas.', refleksi:'💭 Ucapkan: "Tuhan, aku tidak takut, sebab Engkau besertaku."' },
+      { ayat:'"Berbahagialah orang yang murah hatinya." — Matius 5:7', isi:'Kemurahan hati tidak diukur dari besarnya pemberian, tetapi dari ketulusan hati yang memberi.', refleksi:'💭 Kebaikan kecil apa yang bisa saya bagikan hari ini?' },
+      { ayat:'"Iman adalah dasar dari segala sesuatu yang kita harapkan." — Ibrani 11:1', isi:'Meski mata rabun dan langkah lambat, iman membuat kita melihat janji Tuhan dengan jelas.', refleksi:'💭 Harapan apa yang masih saya simpan dalam doa?' },
+      { ayat:'"Percayalah kepada Tuhan dengan segenap hatimu." — Amsal 3:5', isi:'Terkadang jalan Tuhan tidak masuk akal bagi kita. Namun Ia melihat keseluruhan gambar, kita hanya sepotong.', refleksi:'💭 Adakah keputusan yang perlu saya serahkan dalam doa?' },
+      { ayat:'"Supaya mereka mempunyai hidup dalam segala kelimpahan." — Yohanes 10:10', isi:'Kelimpahan bukan soal harta, melainkan hidup yang bermakna, penuh kasih, dan damai bersama Tuhan.', refleksi:'💭 Apa arti "hidup berkelimpahan" bagi saya saat ini?' },
+      { ayat:'"Berdoalah setiap waktu di dalam Roh." — Efesus 6:18', isi:'Doa bukan hanya kata-kata indah. Saat menyapu, memasak, atau duduk santai — semua bisa menjadi doa.', refleksi:'💭 Bagaimana saya mengubah rutinitas hari ini menjadi doa?' },
+      { ayat:'"Tuhan itu penyayang dan pengasih, panjang sabar." — Mazmur 103:8', isi:'Tuhan tidak pernah lelah mengampuni. Setiap kali kita jatuh, tangan-Nya tetap terulur.', refleksi:'💭 Sudahkah saya mengampuni diri sendiri seperti Tuhan mengampuni saya?' },
+      { ayat:'"Segala sesuatu turut bekerja untuk mendatangkan kebaikan." — Roma 8:28', isi:'Bahkan hal yang sulit pun dapat Tuhan pakai untuk kebaikan. Tidak ada yang sia-sia di tangan-Nya.', refleksi:'💭 Pengalaman sulit apa yang ternyata membawa kebaikan bagi saya?' },
+      { ayat:'"Lebih baik sehari di pelataran-Mu." — Mazmur 84:11', isi:'Sedekat-dekatnya dengan Tuhan, walau sederhana, jauh lebih berharga daripada kemewahan tanpa Dia.', refleksi:'💭 Apakah saya merindukan kehadiran Tuhan seperti merindukan rumah?' },
+      { ayat:'"Hendaklah kamu ramah seorang terhadap yang lain." — Efesus 4:32', isi:'Keramahan adalah bahasa kasih yang dimengerti semua orang, di segala usia.', refleksi:'💭 Kepada siapa saya bisa menunjukkan keramahan hari ini?' },
+      { ayat:'"Sebab bagi Allah tidak ada yang mustahil." — Lukas 1:37', isi:'Usia, sakit, kesepian — tidak ada yang di luar kuasa Tuhan. Mujizat-Nya tidak mengenal batas.', refleksi:'💭 Hal "mustahil" apa yang masih saya doakan dengan harapan?' },
+      { ayat:'"Serahkanlah perbuatanmu kepada Tuhan." — Amsal 16:3', isi:'Rencana yang diserahkan kepada Tuhan akan dibentuk-Nya menjadi sesuatu yang lebih baik.', refleksi:'💭 Rencana apa yang ingin saya doakan hari ini?' },
+      { ayat:'"Marilah kepada-Ku, kamu akan mendapat kelegaan." — Matius 11:28-29', isi:'Kelegaan sejati bukan karena masalah selesai, tetapi karena kita tidak lagi menanggungnya sendirian.', refleksi:'💭 Apakah saya memikul beban sendirian, atau bersama Tuhan?' },
+      { ayat:'"Tuhan tidak meminta hal besar, tapi hal kecil dengan cinta besar."', isi:'Setiap sapaan kepada tetangga, setiap senyum kepada cucu, adalah doa yang hidup.', refleksi:'💭 Hal kecil apa yang bisa saya lakukan hari ini dengan penuh cinta?' }
+    ];
+    function tampilkanRenunganAcak(klaim) {
+      const r = renunganData[Math.floor(Math.random()*renunganData.length)];
+      $('renunganAyat').textContent = r.ayat;
+      $('renunganIsi').textContent = r.isi;
+      $('renunganRefleksi').textContent = r.refleksi;
+      if (klaim && tambahFP(2,'renungan',5)) showToast('Renungan baru +2 💰 FaithPoint!');
+    }
+    $('tanggalRenungan').textContent = new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    tampilkanRenunganAcak(false);
+
+    /* ================= WARTA ================= */
+    const wartaData = [
+      { tanggal:'Vatikan', judul:'Paus: "Doakanlah Para Lansia"', isi:'Bapa Suci mengingatkan umat untuk menghormati dan mendoakan para lansia sebagai penjaga iman dan kebijaksanaan keluarga.', sumber:'Vatican News' },
+      { tanggal:'Vatikan', judul:'Pesan Hari Orang Sakit Sedunia', isi:'Paus mengajak umat merawat yang sakit dengan kelembutan, sebab "dalam diri orang sakit, hadir wajah Kristus".', sumber:'Vatican News' },
+      { tanggal:'Universal', judul:'Sinode: Gereja yang Mendengarkan', isi:'Proses sinode mengajak seluruh umat — termasuk para lansia — untuk saling mendengarkan dan berjalan bersama dalam iman.', sumber:'Sekretariat Sinode' },
+      { tanggal:'Indonesia', judul:'KWI: Doakan Kerukunan Bangsa', isi:'Konferensi Waligereja Indonesia mengajak umat Katolik menjadi pembawa damai dan mendoakan persatuan bangsa.', sumber:'KWI' },
+      { tanggal:'Pengingat', judul:'Jangan Lewatkan Rosario', isi:'Persembahkan doa Rosario bagi keluarga, Gereja, dan dunia setiap hari.', sumber:'Sepucuk.' }
+    ];
+    $('wartaContainer').innerHTML = wartaData.map(w => `
+      <div class="warta-item"><span class="warta-date">📍 ${w.tanggal}</span><h3>${w.judul}</h3><p>${w.isi}</p>
+      <div style="font-size:0.72em;color:var(--color-text-light);font-weight:600;margin-top:8px;">Sumber: ${w.sumber}</div></div>`).join('');
+
+    /* ================= DOA HARIAN ================= */
+    const doaHarianData = [
+      { icon:'🌅', judul:'Doa Pagi', sub:'Memulai hari bersama Tuhan', teks:`Allah Bapa yang Mahakasih,\nterima kasih atas malam yang telah berlalu\ndan pagi yang baru Engkau anugerahkan.\n\nKuserahkan hari ini ke dalam tangan-Mu:\nnapasku, langkahku, pikiranku, dan hatiku.\n\nBerkatilah keluargaku, anak-cucuku,\ndan semua orang yang kujumpai hari ini.\n\nJadikanlah aku saluran damai-Mu,\nmeski tenagaku tak lagi seperti dahulu.\n\nDemi Kristus, Tuhan dan Pengantara kami. Amin.\n\n† Bapa Kami... Salam Maria... Kemuliaan...` },
+      { icon:'🌙', judul:'Doa Malam', sub:'Menutup hari dengan damai', teks:`Tuhan Yesus yang Mahabaik,\nterima kasih atas penyertaan-Mu sepanjang hari ini.\n\nAmpunilah segala dosaku:\nkata yang kurang kasih, sikap yang kurang sabar.\n\nKuserahkan malam ini ke dalam tangan-Mu.\nLindungilah aku, keluargaku, dan rumah ini.\n\nBila Engkau memanggilku malam ini,\nterimalah aku dalam kasih-Mu.\n\nBunda Maria, doakanlah kami. Amin.` },
+      { icon:'🍽️', judul:'Doa Makan', sub:'Sebelum & sesudah makan', teks:`— SEBELUM MAKAN —\nBerkatilah kami ya Tuhan,\ndan berkatilah rezeki yang akan kami santap ini,\nkarunia-Mu yang berlimpah.\nDemi Kristus, Tuhan kami. Amin.\n\n— SESUDAH MAKAN —\nKami bersyukur kepada-Mu, ya Bapa,\natas segala kebaikan-Mu.\nEngkau hidup dan berkuasa,\nsepanjang segala masa. Amin.` },
+      { icon:'👨‍👩‍👧‍👦', judul:'Doa Keluarga', sub:'Didoakan bersama di rumah', teks:`Bapa yang Mahakasih,\nkami berkumpul sebagai keluarga di hadirat-Mu.\n\nJagalah keluarga kami dalam kasih dan kerukunan.\nAjarlah kami saling mengampuni,\nsaling mendengarkan, dan saling menopang.\n\nBerkatilah anak-anak kami dalam pekerjaan mereka,\ndan cucu-cucu kami dalam belajar dan bertumbuh.\n\nJadikanlah rumah kami tempat yang damai,\ndi mana nama-Mu dimuliakan setiap hari.\n\nBunda Maria, Ratu Keluarga, doakanlah kami. Amin.` },
+      { icon:'🧒', judul:'Doa untuk Anak & Cucu', sub:'Warisan iman terindah', teks:`Tuhan Yesus,\nKutitipkan anak-anak dan cucu-cucuku\nke dalam hati-Mu yang kudus.\n\nLindungilah mereka dari segala bahaya,\njauhkanlah dari pergaulan yang menyesatkan.\n\nTumbuhkanlah iman mereka seperti iman\nyang Engkau tanamkan dalam hidupku.\n\nJadikanlah mereka orang yang jujur,\nrendah hati, dan mengasihi sesama.\n\nBiarlah kelak mereka mengenang aku\nsebagai orang tua yang berdoa bagi mereka. Amin.` },
+      { icon:'🤒', judul:'Doa Saat Sakit', sub:'Kekuatan dalam kelemahan', teks:`Tuhan Yesus, Engkau pernah berkata:\n"Datanglah kepada-Ku, semua yang letih lesu."\n\nBadanku kini lemah dan sakit,\nnamun imanku bersandar pada-Mu.\n\nSatukanlah sakitku dengan penderitaan-Mu di salib,\nagar mempunyai makna dan buah bagi sesama.\n\nBerilah kesembuhan bila Engkau kehendaki,\ndan kesabaran bila Engkau ingin aku menunggu.\n\nBerkatilah para dokter dan perawat yang merawatku.\nBunda Maria, Kesehatan Orang Sakit, doakanlah aku. Amin.` },
+      { icon:'😰', judul:'Doa Saat Cemas', sub:'Menyerahkan beban', teks:`Bapa yang Maharahim,\nhatiku gelisah dan pikiranku dipenuhi kekhawatiran.\n\nKuserahkan segala kecemasanku kepada-Mu:\nkesehatanku, masa depan anak-cucuku,\ndan segala yang tak sanggup kupikul sendiri.\n\nEngkau bersabda: "Jangan takut, Aku menyertaimu."\nPeganglah tanganku, tenangkanlah hatiku.\n\nBiarlah damai-Mu, yang melampaui segala akal,\nmenjaga hati dan pikiranku. Amin.` },
+      { icon:'😴', judul:'Doa Susah Tidur', sub:'Untuk malam yang gelisah', teks:`Tuhan yang Mahatenang,\nmalam ini mataku tak mau terpejam.\n\nKuangkat pikiranku kepada-Mu.\nKuucapkan perlahan nama-Mu: Yesus... Yesus...\n\nKulepaskan segala pikiran yang mengganggu.\nKuserahkan besok hari ke dalam tangan-Mu.\n\nSeperti anak kecil dalam pelukan ibunya,\ntenangkanlah jiwaku di dalam Engkau.\n\nBunda Maria, selimutilah aku dengan doamu. Amin.` },
+      { icon:'💔', judul:'Doa Saat Kesepian', sub:'Tuhan selalu menemani', teks:`Bapa yang setia,\nterkadang rumah terasa sunyi\ndan hati terasa sepi.\n\nIngatkanlah aku bahwa Engkau tak pernah pergi,\nbahwa Engkau lebih dekat dari nadiku sendiri.\n\nHiburlah aku lewat kenangan indah,\nlewat sapaan sahabat, lewat suara cucu.\n\nJadikanlah kesepianku ruang perjumpaan dengan-Mu.\nAjarlah aku menikmati kehadiran-Mu yang hening. Amin.` },
+      { icon:'🙏', judul:'Doa Syukur Harian', sub:'Menghitung berkat Tuhan', teks:`Tuhan, hari ini aku bersyukur untuk:\n— napas dan kesehatan yang masih Kau beri,\n— makanan di meja makan,\n— keluarga dan sahabat yang mengasihi,\n— atap yang menaungi, dan tidur yang nyenyak.\n\nTerima kasih untuk hal-hal kecil\nyang sering kulupa syukuri.\n\nPenuhi hatiku dengan sukacita,\nagar syukurku menular kepada sesama. Amin.` },
+      { icon:'🕯️', judul:'Doa untuk Arwah', sub:'Mengingat yang telah berpulang', teks:`Bapa yang Maharahim,\nkupersembahkan doa ini bagi\n(…) — sebutkan nama arwah —\nyang telah Engkau panggil mendahului kami.\n\nAmpunilah segala dosanya,\nterimalah dia dalam kebahagiaan kekal.\n\nBerilah penghiburan bagi kami yang ditinggalkan,\ndan kuatkanlah pengharapan kami\nakan perjumpaan kembali di surga.\n\nSemoga arwah para beriman\nberistirahat dalam damai. Amin.` },
+      { icon:'⛪', judul:'Doa Sebelum ke Gereja', sub:'Persiapan hati beribadat', teks:`Tuhan Yesus,\naku bersiap pergi ke rumah-Mu,\nmenghadiri perayaan Ekaristi kudus.\n\nSiapkanlah hatiku agar pantas menyambut-Mu.\nBukalah telingaku untuk sabda-Mu,\ndan lembutkanlah hatiku untuk kasih-Mu.\n\nJadikanlah misa ini sumber kekuatan baru\nbagiku dan seluruh umat yang hadir. Amin.` }
+    ];
+    function renderDoa() {
+      $('doaContainer').innerHTML = doaHarianData.map((d,i) => `
+        <button class="list-item" onclick="bukaDoa(${i})">
+          <span class="li-icon">${d.icon}</span>
+          <span class="li-text">${d.judul}<span class="li-sub">${d.sub}</span></span><span>›</span>
+        </button>`).join('');
+    }
+    renderDoa();
+
+    /* ================= LAGU ================= */
+    const laguData = [
+      {icon:'🌅',judul:'Bapa Engkau Sungguh Baik',sub:'Pagi hari'},{icon:'💚',judul:'Kasih Setia-Mu',sub:'Syukur'},
+      {icon:'🙌',judul:"S'bab Kau Besar",sub:'Puji-pujian'},{icon:'🇮🇩',judul:'Betapa Kita Tidak Bersyukur',sub:'Syukur tanah air'},
+      {icon:'🌹',judul:'Ave Maria',sub:'Bunda Maria'},{icon:'📖',judul:'Tulis Namaku',sub:'Penghiburan'},
+      {icon:'🤝',judul:'Kupercaya Janji-Mu Tuhan',sub:'Penguatan iman'},{icon:'💗',judul:'Sentuh Hatiku',sub:'Penyerahan'},
+      {icon:'⚔️',judul:'Yesus Kekuatanku',sub:'Saat lemah'},{icon:'👑',judul:'Maria Bunda Penolong Abadi',sub:'Devosi'},
+      {icon:'🕊️',judul:'Kasih-Mu Tuhan',sub:'Meditasi'},{icon:'🏠',judul:'Ku Bangga Bapa',sub:'Anak Allah'},
+      {icon:'🌙',judul:'Yesus Sayang Padaku',sub:'Pengantar tidur'},{icon:'🤲',judul:'Doa Sang Pencinta',sub:'Mendalam'},
+      {icon:'👨‍👩‍👧',judul:'Dalam Yesus Kita Bersaudara',sub:'Kebersamaan'}
+    ];
+    $('laguContainer').innerHTML = laguData.map(l => `
+      <a class="list-item" href="https://www.youtube.com/results?search_query=${encodeURIComponent(l.judul+' lagu rohani katolik')}"
+         target="_blank" rel="noopener" onclick="klaimLagu()">
+        <span class="li-icon">${l.icon}</span>
+        <span class="li-text">${l.judul}<span class="li-sub">${l.sub} · ▶️ YouTube</span></span>
+      </a>`).join('');
+    function klaimLagu() { if (tambahFP(3,'lagu',3)) showToast('Mendengarkan lagu +3 💰!'); }
+
+    /* ================= MEDITASI ================= */
+    const meditations = {
+      ignatian:{icon:'🌿✨',tag:'Keputusan & Pemahaman',desc:'Masuki adegan Injil dengan panca indra bersama Yesus.',meta:'⏱️ 15-20 mnt · 📖 Alkitab',tags:'keputusan,hening',title:'🌿 Ignatian: Imajinasi Injil',minutes:20,steps:[{t:'Persiapan',d:'Duduk nyaman. Pejamkan mata. Tarik napas 3 kali.'},{t:'Baca Adegan',d:'Buka Injil hari ini. Baca perlahan 2-3 kali.'},{t:'Masuki Adegan',d:'Bayangkan Anda ADA DI SANA. Apa yang dilihat, didengar?'},{t:'Percakapan Hati',d:'Bicara kepada Yesus seperti teman.'},{t:'Penutup',d:'Ucapkan terima kasih. Akhiri dengan Bapa Kami.'}]},
+      benedictine:{icon:'📖🕯️',tag:'Kedamaian',desc:'Lectio Divina: Baca, Renungkan, Doakan, Istirahat.',meta:'⏱️ 20-30 mnt · 📖 Alkitab',tags:'hening,syukur',title:'📖 Benediktin: Lectio Divina',minutes:25,steps:[{t:'Lectio (Baca)',d:'Baca ayat perlahan. Perhatikan kata yang menyentuh hati.'},{t:'Meditatio',d:'Ulangi kata itu. Apa hubungannya dengan hidup Anda?'},{t:'Oratio (Doakan)',d:'Jadikan renungan itu doa.'},{t:'Contemplatio',d:'Lepaskan semua kata. Istirahat dalam kehadiran Tuhan.'}]},
+      franciscan:{icon:'🐦🌸',tag:'Syukur & Kesepian',desc:'Lihat Tuhan dalam setiap makhluk ciptaan-Nya.',meta:'⏱️ 10-15 mnt · 🌳 Luar ruangan',tags:'syukur,keputusan',title:'🐦 Fransiskan: Syukur Ciptaan',minutes:15,steps:[{t:'Lihat Keluar',d:'Pergi ke taman atau buka jendela.'},{t:'Perhatikan Detail',d:'Amati warna, tekstur, gerakan 2 menit.'},{t:'Lihat Tuhan',d:'Apa kata ciptaan ini tentang kasih Allah?'},{t:'Syukur Nyata',d:'Ucapkan terima kasih dengan spesifik.'},{t:'Penyerahan',d:'Serahkan beban kepada Sang Pencipta.'}]},
+      carmelite:{icon:'🕊️🌅',tag:'Kecemasan',desc:'Masuk ke istana batin, hening bersama Tuhan.',meta:'⏱️ 15-20 mnt · 🤫 Tenang',tags:'kecemasan,hening',title:'🕊️ Karmelit: Doa Hening',minutes:15,steps:[{t:'Masuk ke Dalam',d:'Bayangkan ruang tenang di pusat hati.'},{t:'Lepaskan',d:'Letakkan pikiran di luar pintu.'},{t:'Fokus Kehadiran',d:'Cukup sadari Tuhan ada di sini.'},{t:'Saat Mengembara',d:'Normal. Kembali dengan lembut.'},{t:'Kembali Perlahan',d:'Bawa kedamaian ke aktivitas.'}]},
+      rosary:{icon:'📿🌹',tag:'Keluarga & Perlindungan',desc:'Rosario kontemplatif bersama Bunda Maria.',meta:'⏱️ 20 mnt · 📿 Rosario',tags:'keluarga,kecemasan',title:'📿 Rosario Kontemplatif',minutes:20,steps:[{t:'Pilih Peristiwa',d:'Pilih satu misteri. Baca ayat terkait.'},{t:'Raba Butir Doa',d:'Rasakan tekstur rosario sebagai anchor fokus.'},{t:'Salam Maria',d:'Pandang peristiwa bersama Bunda.'},{t:'Jeda',d:'Hening sejenak setelah 10 Salam Maria.'},{t:'Penyerahan',d:'Serahkan niat khusus kepada Bunda.'}]}
+    };
+    function renderMeditasi() {
+      $('meditationCatalog').innerHTML = Object.keys(meditations).map(k => {
+        const d = meditations[k];
+        return `<article class="card meditation-card" data-tags="${d.tags}" data-type="${k}" tabindex="0" role="button">
+          <div class="meditation-image">${d.icon}</div>
+          <div class="meditation-content">
+            <div class="meditation-header"><h3>${d.title}</h3><span class="meditation-tag">${d.tag}</span></div>
+            <p>${d.desc}</p><div class="meditation-meta"><span>${d.meta}</span></div>
+            <button class="btn" type="button">Mulai Meditasi</button>
+          </div></article>`;
+      }).join('');
+      document.querySelectorAll('.meditation-card').forEach(c => {
+        c.addEventListener('click', () => openMeditation(c.dataset.type));
+        c.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){e.preventDefault();openMeditation(c.dataset.type);} });
+      });
+    }
+    renderMeditasi();
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.meditation-card').forEach(c => {
+        c.style.display = (f==='all'||(c.dataset.tags||'').includes(f)) ? '' : 'none';
+      });
+    }));
+
+    /* ================= MODAL ================= */
+    let mTimer = null;
+    function openModal(title, html, showTimer=false) {
+      clearInterval(mTimer); mTimer=null;
+      $('modalTitle').textContent = title;
+      $('modalBody').innerHTML = html;
+      $('modalTimer').classList.toggle('hidden', !showTimer);
+      $('appModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      clearInterval(mTimer); mTimer=null;
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      $('appModal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+    function bukaDoa(i) {
+      const d = doaHarianData[i];
+      if (tambahFP(2,'doa',6)) setTimeout(()=>showToast('Membaca doa +2 💰!'),400);
+      openModal(`${d.icon} ${d.judul}`, `<div class="prayer-text">${d.teks}</div>
+        <button class="btn" style="margin-top:16px" onclick="bacakanTeks()">🔊 Bacakan Doa</button>
+        <button class="btn btn-outline" style="margin-top:8px" onclick="window.speechSynthesis.cancel()">⏹️ Hentikan Suara</button>`);
+    }
+    function bacakanTeks() {
+      const temp = document.createElement('div');
+      temp.innerHTML = document.querySelector('.prayer-text').innerHTML;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(temp.textContent);
+      u.lang='id-ID'; u.rate=0.85;
+      window.speechSynthesis.speak(u);
+    }
+    function openMeditation(type) {
+      const d = meditations[type];
+      openModal(d.title, d.steps.map((s,i)=>`<div class="step"><span class="step-number">${i+1}</span><strong>${s.t}</strong><p style="margin-top:8px">${s.d}</p></div>`).join(''), true);
+      $('timerDisplayModal').textContent = d.minutes+':00';
+      $('timerToggleModal').textContent = `⏱️ Mulai ${d.minutes} Menit`;
+      $('timerToggleModal').dataset.min = d.minutes;
+    }
+    function toggleModalTimer() {
+      const btn=$('timerToggleModal'), disp=$('timerDisplayModal');
+      if(mTimer){clearInterval(mTimer);mTimer=null;btn.textContent='⏱️ Lanjutkan';return;}
+      let [m,s]=disp.textContent.split(':').map(Number); let tot=isNaN(m)?0:m*60+s;
+      if(tot<=0) tot=parseInt(btn.dataset.min)*60;
+      btn.textContent='⏹️ Jeda';
+      mTimer=setInterval(()=>{tot--;const mm=Math.floor(tot/60),ss=tot%60;
+        disp.textContent=`${mm}:${ss.toString().padStart(2,'0')}`;
+        if(tot<=0){clearInterval(mTimer);mTimer=null;disp.textContent='✨ Damai menyertai Anda';btn.textContent='⏱️ Ulangi';showToast('Meditasi selesai 🙏 +4 💰');tambahFP(4,'meditasi',2);}},1000);
+    }
+    document.addEventListener('keydown', e=>{if(e.key==='Escape')closeModal();});
+    $('appModal').addEventListener('click', e=>{if(e.target.id==='appModal')closeModal();});
+
+    /* ================= JURNAL + PICTURE OF TODAY ================= */
+    let selectedEmotion = '';
+    document.querySelectorAll('#jurnal .emotion-stickers .sticker[data-emotion]').forEach(st => st.addEventListener('click', () => {
+      document.querySelectorAll('#jurnal .sticker[data-emotion]').forEach(s=>s.classList.remove('selected'));
+      st.classList.add('selected'); selectedEmotion = st.dataset.emotion;
+    }));
+
+    function saveJournal() {
+      const content = $('journalInput').value.trim();
+      if(!content){ showToast('Tulis sesuatu dulu ya 🌱'); return; }
+      const entries = JSON.parse(localStorage.getItem('sepucuk-journal')||'[]');
+      entries.unshift({ date:new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}), emotion:selectedEmotion||'bersyukur', content });
+      localStorage.setItem('sepucuk-journal', JSON.stringify(entries.slice(0,100)));
+      $('journalInput').value=''; selectedEmotion='';
+      document.querySelectorAll('#jurnal .sticker[data-emotion]').forEach(s=>s.classList.remove('selected'));
+      renderJournalHistory();
+      if (tambahFP(5,'jurnal',2)) showToast('Jurnal tersimpan +5 💰! 🌿');
+      else showToast('Jurnal tersimpan 🌿');
+    }
+    function renderJournalHistory() {
+      const c = $('journalHistory');
+      const entries = JSON.parse(localStorage.getItem('sepucuk-journal')||'[]');
+      const em = {bersyukur:'🙏',damai:'😌',gembira:'😊',tenang:'🌿',harapan:'🌱'};
+      c.innerHTML = entries.length ? '<h3 style="margin-bottom:14px;color:var(--color-primary);font-size:1.1em;">Catatan Sebelumnya</h3>' +
+        entries.map(e=>`<div style="padding:14px;background:#FAFFFA;border-radius:12px;margin-bottom:10px;border:1px solid var(--color-border);">
+        <span>${em[e.emotion]||'🙏'} <strong style="font-size:0.85em;">${e.date}</strong></span>
+        <p style="margin:8px 0 0">${e.content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
+        ${e.foto?`<img src="${e.foto}" class="foto-preview" style="margin-top:10px;max-width:200px;" alt="Foto hari ini"/>`:''}</div>`).join('')
+        : '<p style="text-align:center;color:var(--color-text-light);">Belum ada catatan 🌱</p>';
+    }
+    renderJournalHistory();
+
+    function berkatiCucu() {
+      if (tambahFP(5,'cucu',1)) showToast('Berkat terkirim untuk cucu tercinta 💕 +5 💰');
+      else showToast('Sudah memberkati cucu hari ini. Tuhan memberkati! 💕');
+    }
+
+    /* ---- PICTURE OF TODAY (kompres foto → simpan ke localStorage) ---- */
+    $('fotoInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const cv = document.createElement('canvas');
+          const skala = Math.min(400/img.width, 400/img.height, 1);
+          cv.width = img.width*skala; cv.height = img.height*skala;
+          cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+          const dataFoto = cv.toDataURL('image/jpeg', 0.6);
+          $('fotoPreviewWrap').innerHTML = `<img src="${dataFoto}" class="foto-preview" alt="Foto hari ini"/>
+            <button class="btn" onclick="simpanFoto('${dataFoto}')">💾 Simpan Foto Hari Ini (+1 💧)</button>`;
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    function simpanFoto(dataFoto) {
+      if (kebun.fotoHariIni === hariIni()) { showToast('Foto hari ini sudah diklaim. Besok lagi ya 📸'); return; }
+      kebun.fotoHariIni = hariIni();
+      kebun.siraman++;
+      simpanKebun();
+      const entries = JSON.parse(localStorage.getItem('sepucuk-journal')||'[]');
+      entries.unshift({ date:new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}), emotion:'gembira', content:'📸 Picture of Today', foto:dataFoto });
+      try { localStorage.setItem('sepucuk-journal', JSON.stringify(entries.slice(0,50))); }
+      catch(err) { showToast('Memori penuh — foto disimpan sebagai penanda saja'); }
+      $('fotoPreviewWrap').innerHTML = `<img src="${dataFoto}" class="foto-preview" alt="Foto hari ini"/><p style="font-weight:700;color:var(--color-primary);">✅ Tersimpan! Dapat 1 💧 Siraman Rohani</p>`;
+      renderJournalHistory(); updateHUD(); renderKebun();
+      showToast('📸 Foto tersimpan +1 💧 Siraman Rohani!');
+    }
+
+    /* ==================== 🌳 KEBUN IMAN ==================== */
+    const KEY_KEBUN = 'sepucuk-kebun';
+    const HARGA_BIBIT = 50, HARGA_SIRAMAN = 10, SIRAM_UNTUK_BUAH = 12;
+    const DEFAULT_KEBUN = {
+      siraman: 1, fotoHariIni: null,
+      pohon: { jenis:null, waktuTanam:null, terakhirDisiram:null, jumlahSiram:0, status:'kosong' }
+    };
+    let kebun = JSON.parse(localStorage.getItem(KEY_KEBUN) || 'null') || JSON.parse(JSON.stringify(DEFAULT_KEBUN));
+    function simpanKebun() { localStorage.setItem(KEY_KEBUN, JSON.stringify(kebun)); updateHUD(); }
+
+    function cekKondisiPohon() {
+      const p = kebun.pohon;
+      if (!p.jenis) { p.status='kosong'; return; }
+      if (p.status === 'mati') return;
+      const jam = (Date.now() - (p.terakhirDisiram || p.waktuTanam)) / 3600000;
+      p.status = jam >= 48 ? 'mati' : jam >= 24 ? 'layu' : 'hidup';
+    }
+
+    const BIBIT = {
+      telang:   { nama:'Telang 💜',   buah:'💜', warna:'#7B2CBF' },
+      matahari: { nama:'Matahari 💛', buah:'💛', warna:'#E9C46A' },
+      bayam:    { nama:'Bayam 💚',    buah:'💚', warna:'#40916C' }
+    };
+
+    function beliBibit(jenis) {
+      const p = kebun.pohon;
+      if (p.jenis && p.status !== 'mati') { showToast('Masih ada pohon di kebun! 🌳'); return; }
+      if (fpData.fp < HARGA_BIBIT) { showToast(`FaithPoint kurang (butuh ${HARGA_BIBIT} 💰). Rajin berdoa & menulis jurnal ya!`); return; }
+      fpData.fp -= HARGA_BIBIT; simpanFP();
+      kebun.pohon = { jenis, waktuTanam:Date.now(), terakhirDisiram:Date.now(), jumlahSiram:0, status:'hidup' };
+      simpanKebun(); renderKebun();
+      showToast(`🌱 Bibit ${BIBIT[jenis].nama} ditanam! Siram tiap hari ya 💧`);
+    }
+
+    function siramiPohon() {
+      cekKondisiPohon();
+      const p = kebun.pohon;
+      if (!p.jenis) { showToast('Tanam bibit dulu ya! 🌱'); return; }
+      if (p.status === 'mati') { showToast('Pohonnya sudah mati 🪵 Tanam bibit baru ya.'); return; }
+      if (kebun.siraman < 1) { showToast('💧 Habis! Tukar 10 💰 atau upload Picture of Today 📸'); return; }
+      if (p.terakhirDisiram && (Date.now()-p.terakhirDisiram) < 1800000) { showToast('Baru saja disiram 😊 Kembali nanti ya.'); return; }
+      kebun.siraman--;
+      p.terakhirDisiram = Date.now();
+      p.jumlahSiram++;
+      p.status = 'hidup';
+      if (p.jumlahSiram >= SIRAM_UNTUK_BUAH) {
+        p.jumlahSiram = 0;
+        p.siapShare = true;
+        fpData.buah++; simpanFP();
+        showToast(`🍎 PUJI TUHAN! ${BIBIT[p.jenis].nama} menghasilkan BUAH IMAN! Bagikan ke WhatsApp! 📤`);
+      } else {
+        showToast(`💧 Pohon disiram! (${p.jumlahSiram}/${SIRAM_UNTUK_BUAH} menuju buah)`);
+      }
+      simpanKebun(); renderKebun();
+    }
+
+    function tukarFaithPoint() {
+      if (fpData.fp < HARGA_SIRAMAN) { showToast(`FaithPoint kurang (butuh ${HARGA_SIRAMAN} 💰)`); return; }
+      fpData.fp -= HARGA_SIRAMAN;
+      kebun.siraman++;
+      simpanFP(); simpanKebun(); renderKebun();
+      showToast('Berhasil! Dapat 1 💧 Siraman Rohani');
+    }
+
+    function visualPohon() {
+      const p = kebun.pohon;
+      if (!p.jenis) return '🕳️';
+      if (p.status === 'mati') return '🪵';
+      if (p.status === 'layu') return '🥀';
+      const b = BIBIT[p.jenis];
+      if (p.jumlahSiram >= SIRAM_UNTUK_BUAH - 1) return `🌳${b.buah}`;
+      if (p.jumlahSiram >= 8) return `🌳${b.buah}`;
+      if (p.jumlahSiram >= 4) return `🌿${b.buah}`;
+      return '🌱';
+    }
+
+    function renderKebun() {
+      cekKondisiPohon(); simpanKebun();
+      const p = kebun.pohon;
+      $('tampilPohon').textContent = visualPohon();
+      let badge = '', sisa = '';
+      if (!p.jenis) badge = '<span class="status-badge badge-hidup">Kebun kosong — tanam bibit! 🌱</span>';
+      else if (p.status==='hidup') {
+        badge = '<span class="status-badge badge-hidup">Sehat 💚</span>';
+        const jamLagi = Math.max(0, 24 - (Date.now()-(p.terakhirDisiram||p.waktuTanam))/3600000);
+        sisa = `⏰ Siram lagi dalam ${Math.floor(jamLagi)} jam sebelum layu`;
+      }
+      else if (p.status==='layu') badge = '<span class="status-badge badge-layu">Layu 🥀 — segera siram!</span>';
+      else badge = '<span class="status-badge badge-mati">Mati 🪵 — tanam bibit baru</span>';
+      $('statusBadge').innerHTML = badge;
+      $('sisaWaktuSiram').textContent = sisa;
+      $('namaPohon').textContent = p.jenis ? `${BIBIT[p.jenis].nama} · 🍎 Buah Iman terkumpul: ${fpData.buah}` : '';
+      $('progresSiram').textContent = p.jenis && p.status!=='mati' ? `💧 ${p.jumlahSiram}/${SIRAM_UNTUK_BUAH} siraman menuju Buah Iman` : '';
+      $('progressBar').style.width = p.jenis ? (p.jumlahSiram/SIRAM_UNTUK_BUAH*100)+'%' : '0%';
+      $('infoBuah').textContent = fpData.buah > 0 ? `🍎 Total Buah Iman: ${fpData.buah}` : '';
+      $('btnShareWA').classList.toggle('hidden', !p.siapShare);
+      updateHUD();
+    }
+
+    /* ================= 📤 SHARE BUAH IMAN KE WHATSAPP ================= */
+    function shareBuahWA() {
+      const p = kebun.pohon;
+      const b = BIBIT[p.jenis] || BIBIT.telang;
+      const cv = $('canvasBuah'), ctx = cv.getContext('2d');
+      const g = ctx.createLinearGradient(0,0,0,800);
+      g.addColorStop(0,'#ECF5EC'); g.addColorStop(1,'#D8E8D8');
+      ctx.fillStyle = g; ctx.fillRect(0,0,800,800);
+      ctx.strokeStyle = '#2D6A4F'; ctx.lineWidth = 12; ctx.strokeRect(24,24,752,752);
+      ctx.textAlign = 'center'; ctx.fillStyle = '#1B4332';
+      ctx.font = 'bold 52px Nunito, sans-serif';
+      ctx.fillText('🍎 BUAH IMAN 🍎', 400, 130);
+      ctx.font = '34px Nunito, sans-serif';
+      ctx.fillStyle = '#2D6A4F';
+      ctx.fillText('Pohon ' + b.nama.replace(/ .*/,''), 400, 200);
+      ctx.fillText('telah berbuah!', 400, 250);
+      ctx.font = '180px serif';
+      ctx.fillText('🌳', 400, 470);
+      ctx.font = '90px serif';
+      ctx.fillText(b.buah, 560, 380);
+      ctx.font = 'italic 30px Nunito, sans-serif';
+      ctx.fillStyle = '#588157';
+      ctx.fillText('"Aku menanam, Apolos menyiram,', 400, 590);
+      ctx.fillText('tetapi Allah yang memberi pertumbuhan"', 400, 630);
+      ctx.font = 'bold 26px Nunito, sans-serif';
+      ctx.fillText('— 1 Korintus 3:6', 400, 675);
+      ctx.font = '24px Nunito, sans-serif';
+      ctx.fillStyle = '#2D6A4F';
+      ctx.fillText('📅 ' + new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) + ' · 🌱 Sepucuk.', 400, 740);
+
+      cv.toBlob(async blob => {
+        const file = new File([blob], 'buah-iman.png', {type:'image/png'});
+        const teks = `🍎 Puji Tuhan! Pohon ${b.nama} saya di *Sepucuk.* telah menghasilkan Buah Iman ke-${fpData.buah}! 🙏🌿`;
+        if (navigator.canShare && navigator.canShare({files:[file]})) {
+          try { await navigator.share({ files:[file], title:'Buah Iman', text:teks });
+                p.siapShare=false; simpanKebun(); renderKebun(); showToast('Berbagi berhasil! 🙏'); return; }
+          catch(e) { /* user batal / gagal */ }
+        }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'buah-iman.png'; a.click();
+        URL.revokeObjectURL(url);
+        window.open('https://wa.me/?text=' + encodeURIComponent(teks + ' (lampirkan gambar buah-iman.png yang baru terunduh ya!)'), '_blank');
+        p.siapShare = false; simpanKebun(); renderKebun();
+        showToast('Gambar terunduh 📥 Lampirkan ke WhatsApp ya!');
+      }, 'image/png');
+    }
+
+    /* ================= INIT ================= */
+    simpanFP(); renderKebun();
+    window.addEventListener('focus', renderKebun);
+    setInterval(renderKebun, 60000);
+    window.addEventListener('online', ()=>showToast('Koneksi kembali 🌱'));
+    window.addEventListener('offline', ()=>showToast('Mode offline aktif 🌿'));
+  </script>
+</body>
+</html>
